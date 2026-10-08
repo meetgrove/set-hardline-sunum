@@ -1,0 +1,917 @@
+<!DOCTYPE html>
+<html lang="tr" class="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>SET x HARDLINE NUTRITION // Yeni Nesil Saha Pazarlaması Sunumu</title>
+  
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
+  
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            hardline: {
+              red: '#E30613',
+              crimson: '#C1000B',
+              darkred: '#7A0006',
+              glow: 'rgba(227, 6, 19, 0.45)',
+            },
+            set: {
+              red: '#FF2E3B',
+              dark: '#08090C',
+              card: '#101217',
+              border: 'rgba(255, 255, 255, 0.08)',
+            }
+          },
+          fontFamily: {
+            sans: ['"Plus Jakarta Sans"', 'sans-serif'],
+            display: ['"Bebas Neue"', 'sans-serif'],
+            mono: ['"Space Grotesk"', 'monospace'],
+          }
+        }
+      }
+    }
+  </script>
+  
+  <!-- Lucide Icons CDN -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+  
+  <!-- Stylesheet -->
+  <link rel="stylesheet" href="style.css">
+</head>
+<body class="bg-[#07080a] text-white overflow-hidden select-none antialiased">
+
+  <!-- Ambient Cinematic Background Glows -->
+  <div class="fixed inset-0 pointer-events-none z-0 overflow-hidden">
+    <div class="glow-orb orb-1"></div>
+    <div class="glow-orb orb-2"></div>
+    <div class="glow-orb orb-3"></div>
+    <div class="noise-overlay"></div>
+    <canvas id="particles-canvas" class="absolute inset-0 opacity-30"></canvas>
+  </div>
+
+  <!-- Top Cinematic Navigation & HUD -->
+  <header class="fixed top-0 left-0 right-0 z-50 flex items-center justify-between px-6 py-4 backdrop-blur-md bg-[#08090c]/70 border-b border-white/5 transition-all duration-300">
+    <!-- Brand Badges -->
+    <div class="flex items-center space-x-4">
+      <div class="flex items-center space-x-3">
+        <img src="assets/images/hardline_logo.svg" alt="Hardline Nutrition" class="h-7 md:h-8 w-auto object-contain drop-shadow-[0_0_12px_rgba(227,6,19,0.3)]">
+        <span class="hidden sm:inline-block text-[10px] text-gray-400 font-mono tracking-wider pl-3 border-l border-white/20 uppercase">STRATEJİ PORTALI</span>
+      </div>
+      
+      <div class="h-5 w-[1px] bg-white/20"></div>
+
+      <div class="flex items-center space-x-2">
+        <img src="assets/images/set_logo_white.png" alt="SET Topluluğu" class="h-5 md:h-6 w-auto object-contain drop-shadow-[0_0_10px_rgba(255,255,255,0.3)]">
+      </div>
+
+      <div class="hidden md:flex items-center px-2.5 py-1 rounded-full bg-red-950/40 border border-hardline-red/30 text-[11px] font-medium text-red-300">
+        <span class="w-1.5 h-1.5 rounded-full bg-hardline-red animate-pulse mr-2"></span>
+        Sayın Buket Hanım'a Özel Proje Dosyası
+      </div>
+    </div>
+
+    <!-- Slide Indicators & Controls -->
+    <div class="flex items-center space-x-3">
+      <!-- Slide Counter -->
+      <div class="px-3 py-1.5 rounded-lg bg-white/5 border border-white/10 text-xs font-mono text-gray-300 flex items-center space-x-1">
+        <span id="current-slide-num" class="text-hardline-red font-bold text-sm">01</span>
+        <span class="text-gray-500">/</span>
+        <span id="total-slides-num" class="text-gray-400">12</span>
+      </div>
+
+      <!-- Autoplay Button -->
+      <button id="btn-autoplay" class="hud-btn" title="Otomatik Akış (Film Modu)">
+        <i data-lucide="play" class="w-4 h-4 text-gray-300"></i>
+      </button>
+
+      <!-- Sound Toggle -->
+      <button id="btn-sound" class="hud-btn" title="Ses Efektleri (Aç/Kapa)">
+        <i data-lucide="volume-2" class="w-4 h-4 text-gray-300"></i>
+      </button>
+
+      <!-- Fullscreen Toggle -->
+      <button id="btn-fullscreen" class="hud-btn" title="Tam Ekran (F)">
+        <i data-lucide="maximize" class="w-4 h-4 text-gray-300"></i>
+      </button>
+
+      <!-- Next/Prev Buttons -->
+      <div class="flex items-center space-x-1 pl-2 border-l border-white/10">
+        <button id="btn-prev" class="hud-nav-btn" title="Önceki Slayt (Yukarı / Sol)">
+          <i data-lucide="chevron-up" class="w-5 h-5"></i>
+        </button>
+        <button id="btn-next" class="hud-nav-btn primary" title="Sonraki Slayt (Aşağı / Sağ)">
+          <i data-lucide="chevron-down" class="w-5 h-5"></i>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Laser Top Progress Line -->
+  <div class="fixed top-[65px] left-0 right-0 z-50 h-[2px] bg-white/5">
+    <div id="progress-bar" class="h-full bg-gradient-to-r from-red-600 via-hardline-red to-orange-500 w-[8.33%] transition-all duration-500 ease-out shadow-[0_0_12px_#E30613]"></div>
+  </div>
+
+  <!-- Right Side Interactive Slide Dots -->
+  <aside class="fixed right-6 top-1/2 -translate-y-1/2 z-40 hidden lg:flex flex-col items-end space-y-3">
+    <nav id="dots-nav" class="flex flex-col space-y-2.5"></nav>
+  </aside>
+
+  <!-- Slide Deck Master Container -->
+  <main id="deck-container" class="relative w-screen h-screen overflow-hidden z-10">
+
+    <!-- ================= SLIDE 1: HERO / TITLE ================= -->
+    <section class="slide-section active" data-slide="1" data-title="Giriş & Vizyon">
+      <div class="container mx-auto px-6 h-full flex flex-col justify-center relative">
+        <div class="max-w-4xl relative z-10 pt-14 sm:pt-20 md:pt-24">
+          
+          <!-- Seamless Co-Branding Logos (Positioned comfortably below top HUD) -->
+          <div class="flex items-center space-x-6 sm:space-x-8 mb-6 sm:mb-8 mt-4 sm:mt-8">
+            <img src="assets/images/hardline_logo.svg" alt="Hardline Nutrition" class="h-10 sm:h-12 md:h-14 w-auto object-contain drop-shadow-[0_0_25px_rgba(227,6,19,0.4)]">
+            <span class="text-2xl sm:text-3xl text-hardline-red/80 font-display tracking-widest font-bold select-none">×</span>
+            <img src="assets/images/set_logo_white.png" alt="SET Topluluğu" class="h-8 sm:h-10 md:h-12 w-auto object-contain drop-shadow-[0_0_25px_rgba(255,255,255,0.3)]">
+          </div>
+
+          <div class="inline-flex items-center space-x-3 px-4 py-1.5 rounded-full bg-gradient-to-r from-red-950/80 to-transparent border border-hardline-red/40 text-xs font-mono tracking-widest text-red-200 mb-6 backdrop-blur-md">
+            <span class="w-2 h-2 rounded-full bg-hardline-red animate-ping"></span>
+            <span>2026-2027 ULUSAL GENÇLİK & SAHA PAZARLAMASI</span>
+          </div>
+
+          <h1 class="font-display text-5xl md:text-7xl lg:text-8xl tracking-tight leading-[0.95] mb-6 uppercase text-transparent bg-clip-text bg-gradient-to-r from-white via-neutral-100 to-neutral-400">
+            KAMPÜSTEN ŞEHRE <br>
+            <span class="text-transparent bg-clip-text bg-gradient-to-r from-hardline-red via-red-500 to-orange-500">DOĞRUDAN ETKİLEŞİM.</span>
+          </h1>
+
+          <p class="text-lg md:text-2xl text-gray-300 font-light leading-relaxed max-w-2xl mb-8">
+            Geleneksel ajansların üniversite duvarlarını ve Z kuşağı bariyerlerini aşamadığı bir çağda; <strong class="text-white font-semibold">Hardline Nutrition</strong> için sahada bizzat ürün deneten, kitleyi harekete geçiren ve sadakat üreten <strong class="text-hardline-red font-semibold">birlikte koordineli saha pazarlaması ortaklığı</strong>.
+          </p>
+
+          <div class="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-8">
+            <div class="stat-card">
+              <div class="text-hardline-red font-display text-3xl md:text-4xl">5 YIL</div>
+              <div class="text-xs text-gray-400 font-mono">Saha Tecrübesi</div>
+            </div>
+            <div class="stat-card">
+              <div class="text-white font-display text-3xl md:text-4xl">100+</div>
+              <div class="text-xs text-gray-400 font-mono">Mega Organizasyon</div>
+            </div>
+            <div class="stat-card">
+              <div class="text-hardline-red font-display text-3xl md:text-4xl">2.500+</div>
+              <div class="text-xs text-gray-400 font-mono">Pilot Sampling Hedefi</div>
+            </div>
+            <div class="stat-card">
+              <div class="text-white font-display text-3xl md:text-4xl">ORTAK</div>
+              <div class="text-xs text-gray-400 font-mono">Güçlü İş Birliği</div>
+            </div>
+          </div>
+
+          <div class="flex flex-wrap items-center gap-4">
+            <button onclick="Deck.goToSlide(2)" class="btn-primary group">
+              <span>Sunumu Keşfet</span>
+              <i data-lucide="arrow-right" class="w-4 h-4 ml-2 transition-transform group-hover:translate-x-1"></i>
+            </button>
+            <span class="text-xs font-mono text-gray-400 flex items-center gap-2">
+              <kbd class="px-2 py-1 bg-white/10 rounded border border-white/15 text-[10px]">↓</kbd> veya 
+              <kbd class="px-2 py-1 bg-white/10 rounded border border-white/15 text-[10px]">Mouse Scroll</kbd> ile film gibi akın
+            </span>
+          </div>
+
+        </div>
+
+        <!-- Decorative Watermark in background -->
+        <div class="absolute right-0 bottom-10 opacity-10 pointer-events-none select-none hidden lg:block">
+          <span class="font-display text-[260px] tracking-tighter leading-none text-white">SET x HL</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- ================= SLIDE 2: YÖNETİCİ ÖZETİ ================= -->
+    <section class="slide-section" data-slide="2" data-title="Yönetici Özeti">
+      <div class="container mx-auto px-6 h-full flex flex-col justify-center">
+        <div class="max-w-5xl">
+          
+          <div class="section-badge">
+            <i data-lucide="zap" class="w-3.5 h-3.5 text-hardline-red mr-1.5"></i>
+            YÖNETİCİ ÖZETİ & DÖNÜŞÜM VİZYONU
+          </div>
+
+          <h2 class="section-title">
+            Neden Klasik Reklam Değil, <br>
+            <span class="text-hardline-red">Deneyimsel Saha Pazarlaması?</span>
+          </h2>
+
+          <p class="section-desc">
+            Buket Hanım ile gerçekleştirdiğimiz ön görüşmede netleştiği üzere; genç sporcular ve Z kuşağı artık dijital reklamlara karşı duyarsızlaşıyor. Onların zihnine girmenin tek yolu: <strong>ürünü bizzat denetmek, yarışma enerjisini yaşatmak ve o anın parçası kılmaktır.</strong>
+          </p>
+
+          <div class="grid md:grid-cols-2 gap-6 mt-8">
+            <!-- Left: Geleneksel Ajans Yaklaşımı -->
+            <div class="p-6 rounded-2xl bg-neutral-900/60 border border-white/5 relative overflow-hidden group hover:border-white/15 transition-all">
+              <div class="flex items-center space-x-3 mb-4">
+                <div class="w-10 h-10 rounded-xl bg-gray-800 flex items-center justify-center text-gray-400">
+                  <i data-lucide="x-circle" class="w-5 h-5 text-gray-400"></i>
+                </div>
+                <div>
+                  <h3 class="text-base font-bold text-gray-200">Geleneksel Reklam / Ajans Modeli</h3>
+                  <p class="text-xs text-gray-400 font-mono">Düşük ROI & Pasif Tüketim</p>
+                </div>
+              </div>
+              <ul class="space-y-3 text-sm text-gray-400">
+                <li class="flex items-start gap-2">
+                  <i data-lucide="minus" class="w-4 h-4 text-red-500 shrink-0 mt-0.5"></i>
+                  <span>Sosyal medya reklamlarında kayıp giden, hatırlanmayan bannerlar.</span>
+                </li>
+                <li class="flex items-start gap-2">
+                  <i data-lucide="minus" class="w-4 h-4 text-red-500 shrink-0 mt-0.5"></i>
+                  <span>Kampüs kapılarından içeri giremeyen, bürokrasiye takılan dış ekipler.</span>
+                </li>
+                <li class="flex items-start gap-2">
+                  <i data-lucide="minus" class="w-4 h-4 text-red-500 shrink-0 mt-0.5"></i>
+                  <span>Ürünü tatmamış, sadece afiş gören ve satın alma dürtüsü oluşmayan kitle.</span>
+                </li>
+                <li class="flex items-start gap-2">
+                  <i data-lucide="minus" class="w-4 h-4 text-red-500 shrink-0 mt-0.5"></i>
+                  <span>Yüksek ajans komisyonları ve sıfır organik samimiyet.</span>
+                </li>
+              </ul>
+            </div>
+
+            <!-- Right: SET x Hardline Modeli -->
+            <div class="p-6 rounded-2xl bg-gradient-to-br from-red-950/40 via-set-card to-neutral-900/80 border border-hardline-red/40 relative overflow-hidden group hover:border-hardline-red transition-all shadow-[0_0_30px_rgba(227,6,19,0.15)]">
+              <div class="flex items-center space-x-3 mb-4">
+                <div class="w-10 h-10 rounded-xl bg-hardline-red/20 border border-hardline-red/50 flex items-center justify-center text-hardline-red">
+                  <i data-lucide="check-circle-2" class="w-5 h-5 text-hardline-red"></i>
+                </div>
+                <div>
+                  <h3 class="text-base font-bold text-white">SET x Hardline Deneyim Motoru</h3>
+                  <p class="text-xs text-red-400 font-mono">Yüksek Dönüşüm (ROI) & Canlı Etki</p>
+                </div>
+              </div>
+              <ul class="space-y-3 text-sm text-gray-200">
+                <li class="flex items-start gap-2">
+                  <i data-lucide="check" class="w-4 h-4 text-hardline-red shrink-0 mt-0.5"></i>
+                  <span><strong>Doğrudan Ürün Deneyimi (Sampling):</strong> Buz gibi BCAA ve lezzetli protein tadımı.</span>
+                </li>
+                <li class="flex items-start gap-2">
+                  <i data-lucide="check" class="w-4 h-4 text-hardline-red shrink-0 mt-0.5"></i>
+                  <span><strong>Resmi & Güvenli Erişim:</strong> Üniversite ve şehir izinleri SET tarafından çözülür.</span>
+                </li>
+                <li class="flex items-start gap-2">
+                  <i data-lucide="check" class="w-4 h-4 text-hardline-red shrink-0 mt-0.5"></i>
+                  <span><strong>Challenge & Rekor Hissi:</strong> Barfiks, deadlift yarışmaları ile unutulmaz anı.</span>
+                </li>
+                <li class="flex items-start gap-2">
+                  <i data-lucide="check" class="w-4 h-4 text-hardline-red shrink-0 mt-0.5"></i>
+                  <span><strong>Doğrudan Sepete Dönüşüm:</strong> Özel QR kodlar ile anında e-ticaret satışı.</span>
+                </li>
+              </ul>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- ================= SLIDE 3: GÜVEN VE KREDİBİLİTE ================= -->
+    <section class="slide-section" data-slide="3" data-title="Kredibilite & Geçmiş">
+      <div class="container mx-auto px-6 h-full flex flex-col justify-center">
+        <div class="max-w-5xl">
+
+          <div class="section-badge">
+            <i data-lucide="shield-check" class="w-3.5 h-3.5 text-hardline-red mr-1.5"></i>
+            KREDİBİLİTE & ORTAK GEÇMİŞ
+          </div>
+
+          <h2 class="section-title">
+            Tanıyoruz, Biliyoruz, <br>
+            <span class="text-hardline-red">Daha Önce Birlikte Başardık.</span>
+          </h2>
+
+          <p class="section-desc">
+            SET Topluluğu ve Hardline Nutrition arasındaki bağ bir ilk tanışma değil; geçmiş dönemlerde salonlardan açık hava etkinliklerine dek uzanan başarılı organizasyonların devamıdır.
+          </p>
+
+          <div class="grid md:grid-cols-3 gap-6 mt-8">
+            <div class="feature-box">
+              <div class="feature-icon-wrapper">
+                <i data-lucide="calendar" class="w-6 h-6 text-hardline-red"></i>
+              </div>
+              <h3 class="text-lg font-bold text-white mb-2">5 Yıl & 100+ Etkinlik</h3>
+              <p class="text-sm text-gray-400 leading-relaxed">
+                Spor şenliklerinden müzik festivallerine, akademi söyleşilerinden açık hava turnuvalarına kadar yüz binlerce gence dokunan kusursuz operasyon sicili.
+              </p>
+            </div>
+
+            <div class="feature-box border-hardline-red/40 bg-gradient-to-b from-red-950/20 to-neutral-900/60">
+              <div class="feature-icon-wrapper bg-hardline-red/20">
+                <i data-lucide="flame" class="w-6 h-6 text-hardline-red"></i>
+              </div>
+              <h3 class="text-lg font-bold text-white mb-2">Geçmiş Hardline İş Birliği</h3>
+              <p class="text-sm text-gray-300 leading-relaxed">
+                Hardline ailesiyle Tekirdağ ve çevre illerde gerçekleştirilen yüksek katılımlı organizasyonlar; sahadaki dinamizmin ve marka sadakatinin en somut kanıtıdır.
+              </p>
+            </div>
+
+            <div class="feature-box">
+              <div class="feature-icon-wrapper">
+                <i data-lucide="globe-2" class="w-6 h-6 text-hardline-red"></i>
+              </div>
+              <h3 class="text-lg font-bold text-white mb-2">6 Avrupa Ülkesi & Erasmus+</h3>
+              <p class="text-sm text-gray-400 leading-relaxed">
+                Uluslararası gençlik değişimleri ve Erasmus+ projeleriyle kanıtlanan kurumsal olgunluk, disiplinli bütçe yönetimi ve yüksek temsil kabiliyeti.
+              </p>
+            </div>
+          </div>
+
+          <div class="mt-8 p-4 rounded-xl bg-white/5 border border-white/10 flex items-center justify-between flex-wrap gap-4">
+            <div class="flex items-center space-x-3">
+              <div class="w-3 h-3 rounded-full bg-emerald-500 shadow-[0_0_8px_#10B981]"></div>
+              <span class="text-xs md:text-sm text-gray-300 font-mono">
+                Hardline Marka Yönetimi İçin: <strong class="text-white">SIFIR İDARİ RİSK & MAKSİMUM GÜVEN</strong>
+              </span>
+            </div>
+            <span class="text-xs text-gray-400 font-mono">Doğrulanmış Operasyon Sicili</span>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- ================= SLIDE 4: STRATEJİK OYUN ALANI ================= -->
+    <section class="slide-section" data-slide="4" data-title="Oyun Alanı">
+      <div class="container mx-auto px-6 h-full flex flex-col justify-center">
+        <div class="max-w-5xl">
+
+          <div class="section-badge">
+            <i data-lucide="map-pin" class="w-3.5 h-3.5 text-hardline-red mr-1.5"></i>
+            STRATEJİK KONUMLANDIRMA
+          </div>
+
+          <h2 class="section-title">
+            Sadece Üniversite Değil: <br>
+            <span class="text-hardline-red">Kampüsler + Şehir Meydanları.</span>
+          </h2>
+
+          <p class="section-desc">
+            Bu projenin en büyük farkı, Hardline Nutrition'ı yalnızca bir amfiye ya da kapalı salona hapsetmemesidir. Hedefimiz: <strong>Gençliğin ve sporun olduğu her açık alanda bayrak dalgalandırmaktır.</strong>
+          </p>
+
+          <div class="grid md:grid-cols-2 gap-8 mt-8">
+            <div class="arena-card">
+              <div class="flex items-center justify-between mb-4">
+                <span class="arena-tag">ALAN 01</span>
+                <i data-lucide="graduation-cap" class="w-6 h-6 text-hardline-red"></i>
+              </div>
+              <h3 class="text-xl font-bold text-white mb-2">Üniversite Kampüsleri & Oryantasyon</h3>
+              <p class="text-sm text-gray-400 leading-relaxed mb-4">
+                Öğrencilerin hayatında yeni bir sayfa açtığı oryantasyon döneminde, stadyumlarda ve kampüs meydanlarında Hardline stantları ve meydan okuma parkurları.
+              </p>
+              <div class="flex items-center gap-2 text-xs font-mono text-gray-300">
+                <i data-lucide="check" class="w-4 h-4 text-emerald-400"></i>
+                <span>Salon sporcuları, takım oyuncuları ve yeni başlayanlar</span>
+              </div>
+            </div>
+
+            <div class="arena-card">
+              <div class="flex items-center justify-between mb-4">
+                <span class="arena-tag">ALAN 02</span>
+                <i data-lucide="trees" class="w-6 h-6 text-hardline-red"></i>
+              </div>
+              <h3 class="text-xl font-bold text-white mb-2">Şehir Meydanları & Açık Hava Festivalleri</h3>
+              <p class="text-sm text-gray-400 leading-relaxed mb-4">
+                Sahil kordonları, belediye meydanları, açık hava gençlik festivalleri ve sokak sporları buluşmalarında Hardline adına anahtar teslim etkinlikler.
+              </p>
+              <div class="flex items-center gap-2 text-xs font-mono text-gray-300">
+                <i data-lucide="check" class="w-4 h-4 text-emerald-400"></i>
+                <span>Koşu grupları, street workout, fitness meraklıları ve şehir gençliği</span>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- ================= SLIDE 5: AKTİVASYON 1 - POWER CHALLENGE ================= -->
+    <section class="slide-section" data-slide="5" data-title="Power Challenge">
+      <div class="container mx-auto px-6 h-full flex flex-col justify-center">
+        <div class="max-w-6xl">
+
+          <div class="section-badge">
+            <i data-lucide="dumbbell" class="w-3.5 h-3.5 text-hardline-red mr-1.5"></i>
+            SAHA AKTİVASYON KONSEPTİ 01
+          </div>
+
+          <h2 class="section-title">
+            "Hardline Power Challenge Zone" <br>
+            <span class="text-hardline-red">Meydan Okuyanların Arenası.</span>
+          </h2>
+
+          <div class="grid lg:grid-cols-12 gap-8 items-center mt-6">
+            <div class="lg:col-span-7 space-y-4">
+              <p class="text-base text-gray-300 leading-relaxed">
+                Festival ve kampüs alanının tam merkezine kurulacak siyah-kırmızı endüstriyel kafes donatısı. Burada katılımcılar sadece ürün görmez; <strong>güçlerini test eder, alkış alır ve ödül kazanır.</strong>
+              </p>
+
+              <div class="space-y-3">
+                <div class="challenge-item">
+                  <div class="challenge-num">01</div>
+                  <div>
+                    <h4 class="font-bold text-white text-sm">Deadlift & Barfiks Rekortmeni</h4>
+                    <p class="text-xs text-gray-400">Dijital skorboard önünde canlı anonslarla günün en yüksek tekrarını yapanlara Hardline Whey Protein ödülü.</p>
+                  </div>
+                </div>
+
+                <div class="challenge-item">
+                  <div class="challenge-num">02</div>
+                  <div>
+                    <h4 class="font-bold text-white text-sm">1 Dakika Şınav & Plank Meydan Okuması</h4>
+                    <p class="text-xs text-gray-400">Her seviyeden öğrencinin katılabileceği, eğlenceli ve coşkulu mini yarışmalar. Katılan herkese shaker & numune ürün.</p>
+                  </div>
+                </div>
+
+                <div class="challenge-item">
+                  <div class="challenge-num">03</div>
+                  <div>
+                    <h4 class="font-bold text-white text-sm">Sporcu Eğitmen & Antrenör Desteği</h4>
+                    <p class="text-xs text-gray-400">SET bünyesindeki spor akademisi öğrencileri ve antrenörler form analizi yaparak Hardline ürünlerinin bilimsel faydalarını anlatır.</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Visual Preview Card -->
+            <div class="lg:col-span-5">
+              <div class="relative rounded-2xl overflow-hidden border border-white/10 group shadow-2xl">
+                <img src="assets/images/meydan_konsepti.jpg" alt="Meydan Konsepti" class="w-full h-72 object-cover transition-transform duration-700 group-hover:scale-105" onerror="this.src='assets/images/sahne_master_render.jpg'">
+                <div class="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-transparent flex flex-col justify-end p-6">
+                  <span class="text-xs font-mono text-hardline-red uppercase tracking-widest font-bold">MEYDAN YERLEŞİMİ</span>
+                  <h4 class="text-lg font-bold text-white">SET Fest Açık Hava Spor ve Oyun Arenası</h4>
+                  <p class="text-xs text-gray-300">Yüksek yaya trafiğinin merkezine entegre 3D donatı modeli</p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- ================= SLIDE 6: AKTİVASYON 2 - AKILLI SAMPLING ================= -->
+    <section class="slide-section" data-slide="6" data-title="Akıllı Sampling">
+      <div class="container mx-auto px-6 h-full flex flex-col justify-center">
+        <div class="max-w-5xl">
+
+          <div class="section-badge">
+            <i data-lucide="cup-soda" class="w-3.5 h-3.5 text-hardline-red mr-1.5"></i>
+            SAHA AKTİVASYON KONSEPTİ 02
+          </div>
+
+          <h2 class="section-title">
+            Akıllı Sampling Barı & <br>
+            <span class="text-hardline-red">Doğrudan Sepete Dönüşüm (QR Funnel).</span>
+          </h2>
+
+          <p class="section-desc">
+            Klasik broşür dağıtmak çöpe para atmaktır. Biz ürünü buz gibi tazeleyip içiriyor, ardından özel indirim koduyla <strong>aynı gün Hardline web sitesinden siparişe dönüştürüyoruz.</strong>
+          </p>
+
+          <div class="grid md:grid-cols-3 gap-6 mt-8">
+            <div class="flow-step-card">
+              <div class="flow-step-badge">ADIM 1</div>
+              <div class="w-12 h-12 rounded-xl bg-hardline-red/10 border border-hardline-red/30 flex items-center justify-center text-hardline-red mb-4">
+                <i data-lucide="droplets" class="w-6 h-6"></i>
+              </div>
+              <h3 class="text-lg font-bold text-white mb-2">Soğuk BCAA & Protein Barı</h3>
+              <p class="text-xs text-gray-400 leading-relaxed">
+                Özel tasarlanmış Hardline Barında festival katılımcılarına buzlu karpuzlu/yeşil elmalı BCAA veya çikolatalı protein shake tadımı.
+              </p>
+            </div>
+
+            <div class="flow-step-card">
+              <div class="flow-step-badge">ADIM 2</div>
+              <div class="w-12 h-12 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center text-white mb-4">
+                <i data-lucide="qr-code" class="w-6 h-6 text-hardline-red"></i>
+              </div>
+              <h3 class="text-lg font-bold text-white mb-2">Kişiselleştirilmiş QR Kod</h3>
+              <p class="text-xs text-gray-400 leading-relaxed">
+                Tadım bardakları ve shaker hediyeleri üzerinde yer alan özel QR kod taranır: Kullanıcı anında Hardline mobil/web sayfasına yönlenir.
+              </p>
+            </div>
+
+            <div class="flow-step-card">
+              <div class="flow-step-badge">ADIM 3</div>
+              <div class="w-12 h-12 rounded-xl bg-emerald-500/10 border border-emerald-500/30 flex items-center justify-center text-emerald-400 mb-4">
+                <i data-lucide="shopping-bag" class="w-6 h-6"></i>
+              </div>
+              <h3 class="text-lg font-bold text-white mb-2">Anında %15 İndirim & Sepet</h3>
+              <p class="text-xs text-gray-400 leading-relaxed">
+                Etkinliğe özel <code class="text-emerald-400 bg-emerald-950/60 px-1 py-0.5 rounded">HARDLINESET15</code> koduyla katılımcı ilk siparişini indirimle geçer; marka ölçülebilir ciro kazanır.
+              </p>
+            </div>
+          </div>
+
+          <div class="mt-8 p-4 rounded-xl bg-gradient-to-r from-red-950/30 to-black border border-hardline-red/30 flex items-center justify-between flex-wrap gap-4">
+            <span class="text-xs md:text-sm text-gray-300 font-mono">
+              ⚡ Sonuç: <strong>Buket Hanım’a ve Yönetime Her Etkinlik Sonunda Satışa Dönüşüm Raporu</strong>
+            </span>
+            <span class="text-xs text-hardline-red font-bold font-mono tracking-wider">NET ROI TAKİBİ</span>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- ================= SLIDE 7: AKTİVASYON 3 - MEGA SAHNE VE FESTİVAL ================= -->
+    <section class="slide-section" data-slide="7" data-title="Festival & Sahne">
+      <div class="container mx-auto px-6 h-full flex flex-col justify-center">
+        <div class="max-w-6xl">
+
+          <div class="section-badge">
+            <i data-lucide="music" class="w-3.5 h-3.5 text-hardline-red mr-1.5"></i>
+            SAHA AKTİVASYON KONSEPTİ 03
+          </div>
+
+          <h2 class="section-title">
+            SET Fest Mega Sahne Entegrasyonu <br>
+            <span class="text-hardline-red">On Binlerce Gencin Odak Noktası.</span>
+          </h2>
+
+          <div class="grid lg:grid-cols-12 gap-8 items-center mt-6">
+            <div class="lg:col-span-5 space-y-4">
+              <p class="text-sm md:text-base text-gray-300 leading-relaxed">
+                24m² - 48m² profesyonel konser sahnemiz, ses-ışık sistemleri ve dev LED ekranlarımız festival boyunca aralıksız Hardline markasıyla ışıldar.
+              </p>
+
+              <div class="space-y-3">
+                <div class="p-3.5 rounded-xl bg-white/5 border border-white/10 flex items-center space-x-3">
+                  <i data-lucide="tv" class="w-5 h-5 text-hardline-red shrink-0"></i>
+                  <span class="text-xs text-gray-200">LED ekranlarda dinamik Hardline sporcu videoları & reklam döngüsü</span>
+                </div>
+                <div class="p-3.5 rounded-xl bg-white/5 border border-white/10 flex items-center space-x-3">
+                  <i data-lucide="flag" class="w-5 h-5 text-hardline-red shrink-0"></i>
+                  <span class="text-xs text-gray-200">Sahne önü ve festival koridorlarında 5 metrelik siyah-kırmızı dikey flamalar</span>
+                </div>
+                <div class="p-3.5 rounded-xl bg-white/5 border border-white/10 flex items-center space-x-3">
+                  <i data-lucide="radio" class="w-5 h-5 text-hardline-red shrink-0"></i>
+                  <span class="text-xs text-gray-200">DJ performans aralarında "Hardline Energy Break" ve kalabalığa shaker atışları</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="lg:col-span-7 grid grid-cols-2 gap-4">
+              <div class="rounded-xl overflow-hidden border border-white/10 relative group">
+                <img src="assets/images/sahne_perspektif.jpg" alt="Sahne Yerleşimi" class="w-full h-44 object-cover transition-transform group-hover:scale-105" onerror="this.src='assets/images/flama_gece.jpg'">
+                <div class="absolute bottom-0 inset-x-0 bg-black/80 p-2.5 text-[11px] font-mono text-gray-300">
+                  Konser Sahnesi & LED Yerleşimi
+                </div>
+              </div>
+              <div class="rounded-xl overflow-hidden border border-white/10 relative group">
+                <img src="assets/images/flama_gece.jpg" alt="Flama Atmosferi" class="w-full h-44 object-cover transition-transform group-hover:scale-105" onerror="this.src='assets/images/flama_yelken.jpg'">
+                <div class="absolute bottom-0 inset-x-0 bg-black/80 p-2.5 text-[11px] font-mono text-gray-300">
+                  Gece Işıklandırması & Flamalar
+                </div>
+              </div>
+              <div class="col-span-2 rounded-xl overflow-hidden border border-white/10 relative group">
+                <img src="assets/images/sahne_master_render.jpg" alt="Master Render" class="w-full h-44 object-cover transition-transform group-hover:scale-105">
+                <div class="absolute bottom-0 inset-x-0 bg-black/80 p-2.5 text-[11px] font-mono text-gray-300 flex justify-between">
+                  <span>3D Master Saha Entegrasyonu</span>
+                  <span class="text-hardline-red font-bold">Hedeflenen Katılım // 5.000 - 10.000+</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- ================= SLIDE 8: DİJİTAL ÇARPAN & VİRAL REELS ================= -->
+    <section class="slide-section" data-slide="8" data-title="Dijital Çarpan">
+      <div class="container mx-auto px-6 h-full flex flex-col justify-center">
+        <div class="max-w-5xl">
+
+          <div class="section-badge">
+            <i data-lucide="share-2" class="w-3.5 h-3.5 text-hardline-red mr-1.5"></i>
+            DİJİTAL ÇARPAN & ORGANİK ERİŞİM
+          </div>
+
+          <h2 class="section-title">
+            Sahadaki Enerjiyi Milyonluk <br>
+            <span class="text-hardline-red">Viral Sosyal Medya Etkisine Çeviriyoruz.</span>
+          </h2>
+
+          <p class="section-desc">
+            Saha aktivasyonuna katılan her genç, elindeki akıllı telefonla Hardline Nutrition'ın doğal içerik üreticisine dönüşür.
+          </p>
+
+          <div class="grid md:grid-cols-4 gap-4 mt-8">
+            <div class="viral-card">
+              <div class="text-hardline-red font-display text-4xl mb-1">01</div>
+              <h4 class="font-bold text-white text-sm mb-1.5">Reels & TikTok Challenge</h4>
+              <p class="text-xs text-gray-400">#HardlineGucu ve #SETHardline etiketiyle barfiks/deadlift rekor videosunu paylaşanlara anlık hediyeler.</p>
+            </div>
+
+            <div class="viral-card">
+              <div class="text-white font-display text-4xl mb-1">02</div>
+              <h4 class="font-bold text-white text-sm mb-1.5">Mikro-Influencer Ağı</h4>
+              <p class="text-xs text-gray-400">Üniversitelerin spor kaptanları, fitness sayfası yöneticileri ve öğrenci fenomenleri ile organize story paylaşımları.</p>
+            </div>
+
+            <div class="viral-card">
+              <div class="text-hardline-red font-display text-4xl mb-1">03</div>
+              <h4 class="font-bold text-white text-sm mb-1.5">4K Sinematik Aftermovie</h4>
+              <p class="text-xs text-gray-400">SET prodüksiyon ekibi tarafından çekilen, doğrudan Hardline resmi hesaplarında yayınlanmaya hazır profesyonel marka filmleri.</p>
+            </div>
+
+            <div class="viral-card">
+              <div class="text-white font-display text-4xl mb-1">04</div>
+              <h4 class="font-bold text-white text-sm mb-1.5">Kademeli Organik Gösterim</h4>
+              <p class="text-xs text-gray-400">Öğrencilerin storyleri ve topluluk hesaplarının paylaşımlarıyla zamanla büyüyen sürdürülebilir dijital etki (75.000 - 150.000+).</p>
+            </div>
+          </div>
+
+          <div class="mt-8 p-5 rounded-2xl bg-neutral-900/80 border border-white/10 flex items-center space-x-4">
+            <div class="w-12 h-12 rounded-xl bg-pink-500/10 border border-pink-500/30 flex items-center justify-center text-pink-400 shrink-0">
+              <i data-lucide="instagram" class="w-6 h-6"></i>
+            </div>
+            <div>
+              <h5 class="text-sm font-bold text-white">Doğrudan Marka Hesabı Büyütme</h5>
+              <p class="text-xs text-gray-400">Çekiliş ve yarışmalara katılım şartı olarak <span class="text-hardline-red font-mono font-bold">@hardline.nutrition</span> resmi hesabının takibi şart koşularak organik kitle devredilir.</p>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- ================= SLIDE 9: %100 ANAHTAR TESLİM OPERASYON ================= -->
+    <section class="slide-section" data-slide="9" data-title="Anahtar Teslim">
+      <div class="container mx-auto px-6 h-full flex flex-col justify-center">
+        <div class="max-w-5xl">
+
+          <div class="section-badge">
+            <i data-lucide="handshake" class="w-3.5 h-3.5 text-hardline-red mr-1.5"></i>
+            STRATEJİK ORTAKLIK & SAHA GÜCÜ
+          </div>
+
+          <h2 class="section-title">
+            Birlikte Güçlü İş Birliği: <br>
+            <span class="text-hardline-red">SET'in Saha Tecrübesiyle Koordineli Yönetim.</span>
+          </h2>
+
+          <p class="section-desc">
+            Hardline marka vizyonu ve kurumsal hedefleri doğrultusunda; sahadaki izinlerden teknik altyapıya, kitle yönetiminden güvenliğe kadar tüm operasyonu omuz omuza, profesyonel ve şeffaf bir iş birliğiyle sahaya indiriyoruz.
+          </p>
+
+          <div class="grid md:grid-cols-2 gap-4 mt-8">
+            <div class="op-card">
+              <i data-lucide="file-check" class="w-6 h-6 text-hardline-red shrink-0"></i>
+              <div>
+                <h4 class="font-bold text-white text-sm mb-1">Rektörlük, Valilik & Belediye İzinleri</h4>
+                <p class="text-xs text-gray-400">Resmi onay dilekçeleri, alan tahsisleri, elektrik ve güvenlik izinleri SET tarafından resmi statüyle çözülür.</p>
+              </div>
+            </div>
+
+            <div class="op-card">
+              <i data-lucide="shield" class="w-6 h-6 text-hardline-red shrink-0"></i>
+              <div>
+                <h4 class="font-bold text-white text-sm mb-1">7/24 Gece Nöbeti & Ürün Güvenliği</h4>
+                <p class="text-xs text-gray-400">Hardline stantları ve ürün kolileri etkinlik boyunca 7/24 SET görevlileri ve güvenlik denetiminde korunur.</p>
+              </div>
+            </div>
+
+            <div class="op-card">
+              <i data-lucide="users" class="w-6 h-6 text-hardline-red shrink-0"></i>
+              <div>
+                <h4 class="font-bold text-white text-sm mb-1">60+ Kişilik Saha & Lojistik Ekibi</h4>
+                <p class="text-xs text-gray-400">Telsizli, tek tip kıyafetli, eğitimli saha personelimiz ürün dağıtımından kitle kontrolüne her an hazırdır.</p>
+              </div>
+            </div>
+
+            <div class="op-card">
+              <i data-lucide="truck" class="w-6 h-6 text-hardline-red shrink-0"></i>
+              <div>
+                <h4 class="font-bold text-white text-sm mb-1">Ses, Işık, Truss & Stant Kurulumu</h4>
+                <p class="text-xs text-gray-400">Donatıların sabah erkenden kurulması, akşama kadar kesintisiz çalışması ve etkinlik sonu alan temizliği anahtar teslimdir.</p>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- ================= SLIDE 10: ÖLÇÜLEBİLİR METRİKLER (KPI & ROI) ================= -->
+    <section class="slide-section" data-slide="10" data-title="KPI & ROI">
+      <div class="container mx-auto px-6 h-full flex flex-col justify-center">
+        <div class="max-w-5xl">
+
+          <div class="section-badge">
+            <i data-lucide="line-chart" class="w-3.5 h-3.5 text-hardline-red mr-1.5"></i>
+            ÖLÇÜLEBİLİR DEĞER & PERFORMANS
+          </div>
+
+          <h2 class="section-title">
+            Şeffaf ve Ölçülebilir Etki: <br>
+            <span class="text-hardline-red">Kademeli ve Gerçekçi Performans Metrikleri.</span>
+          </h2>
+
+          <p class="section-desc">
+            Abartılı rakamlar yerine; sahanın dinamiklerine tam uyan, pilot uygulamadan başlayarak adım adım büyüyecek şeffaf ve ölçülebilir hedef göstergeleri sunuyoruz.
+          </p>
+
+          <div class="grid grid-cols-2 md:grid-cols-4 gap-6 mt-8">
+            <div class="kpi-box">
+              <div class="text-3xl md:text-5xl font-display text-hardline-red counter" data-target="2500">0</div>
+              <div class="text-xs font-bold text-white mt-1">Hedeflenen Sampling</div>
+              <div class="text-[11px] text-gray-400">Pilot etkinlikte birebir tadım</div>
+            </div>
+
+            <div class="kpi-box">
+              <div class="text-3xl md:text-5xl font-display text-white counter" data-target="8000">0</div>
+              <div class="text-xs font-bold text-white mt-1">Hedeflenen Alan Kitlesi</div>
+              <div class="text-[11px] text-gray-400">Kampüs ve meydan ziyaretçisi</div>
+            </div>
+
+            <div class="kpi-box">
+              <div class="text-3xl md:text-5xl font-display text-hardline-red counter" data-target="1200">0</div>
+              <div class="text-xs font-bold text-white mt-1">Hedeflenen QR Dönüşümü</div>
+              <div class="text-[11px] text-gray-400">Tadım sonrası sepet yönlenmesi</div>
+            </div>
+
+            <div class="kpi-box">
+              <div class="text-3xl md:text-5xl font-display text-white counter" data-target="65000">0</div>
+              <div class="text-xs font-bold text-white mt-1">Kademeli Dijital Erişim</div>
+              <div class="text-[11px] text-gray-400">Zamanla büyüyen organik etki</div>
+            </div>
+          </div>
+
+          <!-- Interactive Calculator / Preview -->
+          <div class="mt-8 p-5 rounded-2xl bg-neutral-900/90 border border-hardline-red/30">
+            <div class="flex items-center justify-between mb-3">
+              <div class="flex items-center space-x-2">
+                <i data-lucide="sliders" class="w-4 h-4 text-hardline-red"></i>
+                <span class="text-xs font-mono font-bold text-gray-200">ETKİ SİMÜLASYONU // KATILIMCI ÖLÇEĞİ:</span>
+              </div>
+              <span id="calc-scale-label" class="text-xs font-mono text-hardline-red font-bold">1X Standart Kampüs</span>
+            </div>
+            <input type="range" id="scale-slider" min="1" max="5" value="1" step="1" class="w-full accent-hardline-red cursor-pointer">
+            <div class="flex justify-between text-[10px] font-mono text-gray-500 mt-1">
+              <span>Tek Kampüs</span>
+              <span>2 Bölge</span>
+              <span>Bölgesel Şenlik</span>
+              <span>SET Fest Mega</span>
+              <span>Ulusal Tur</span>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- ================= SLIDE 11: UYGULAMA TAKVİMİ / ROADMAP ================= -->
+    <section class="slide-section" data-slide="11" data-title="Uygulama Takvimi">
+      <div class="container mx-auto px-6 h-full flex flex-col justify-center">
+        <div class="max-w-5xl">
+
+          <div class="section-badge">
+            <i data-lucide="milestone" class="w-3.5 h-3.5 text-hardline-red mr-1.5"></i>
+            YOL HARİTASI & UYGULAMA
+          </div>
+
+          <h2 class="section-title">
+            Fikirden Sahaya: <br>
+            <span class="text-hardline-red">3 Aşamalı Aksiyon Planı.</span>
+          </h2>
+
+          <p class="section-desc">
+            Buket Hanım ile yapacağımız görüşmenin hemen ardından hayata geçecek pürüzsüz çalışma takvimimiz.
+          </p>
+
+          <div class="grid md:grid-cols-3 gap-6 mt-8">
+            <div class="phase-card">
+              <div class="phase-number">FAZ 01</div>
+              <h3 class="text-base font-bold text-white mb-2">Hizalama & Hazırlık</h3>
+              <div class="text-xs text-hardline-red font-mono mb-3">Hafta 1 - 2</div>
+              <ul class="text-xs text-gray-400 space-y-2">
+                <li>• Buket Hanım ile konsept ve ürün sepeti mutabakatı.</li>
+                <li>• Resmi rektörlük / idari izinlerin netleştirilmesi.</li>
+                <li>• QR kod ve kampanya kodunun (HARDLINESET) tanımlanması.</li>
+              </ul>
+            </div>
+
+            <div class="phase-card border-hardline-red/50 bg-gradient-to-b from-red-950/20 to-neutral-900">
+              <div class="phase-number text-hardline-red">FAZ 02</div>
+              <h3 class="text-base font-bold text-white mb-2">Pilot Sahaya İniş</h3>
+              <div class="text-xs text-hardline-red font-mono mb-3">SET Kampüse Hoş Geldin Fest</div>
+              <ul class="text-xs text-gray-300 space-y-2">
+                <li>• İlk büyük ölçekli Power Challenge kurulumu.</li>
+                <li>• 2.500 - 3.500+ porsiyon hedeflenen pilot sampling dağıtımı.</li>
+                <li>• Sahne LED ekranlarında ana sponsorluk şovları.</li>
+                <li>• Canlı Reels ve içerik çekimleri.</li>
+              </ul>
+            </div>
+
+            <div class="phase-card">
+              <div class="phase-number">FAZ 03</div>
+              <h3 class="text-base font-bold text-white mb-2">Ulusal Genişleme</h3>
+              <div class="text-xs text-hardline-red font-mono mb-3">2026-2027 Sezonu</div>
+              <ul class="text-xs text-gray-400 space-y-2">
+                <li>• Pilot festivalin sonuç raporunun sunulması.</li>
+                <li>• Diğer şehir meydanları ve açık hava etkinliklerine yayılım.</li>
+                <li>• Yıl boyu süren sürdürülebilir pazarlama modeli.</li>
+              </ul>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- ================= SLIDE 12: KAPANIŞ VE İLETİŞİM ================= -->
+    <section class="slide-section" data-slide="12" data-title="Kapanış & İletişim">
+      <div class="container mx-auto px-6 h-full flex flex-col justify-center">
+        <div class="max-w-4xl text-center mx-auto">
+
+          <div class="inline-flex items-center space-x-2 px-4 py-1.5 rounded-full bg-red-950/60 border border-hardline-red/40 text-xs font-mono text-red-200 mb-6">
+            <span class="w-2 h-2 rounded-full bg-hardline-red"></span>
+            <span>SONRAKİ ADIM // STRATEJİ RANDEVUSU</span>
+          </div>
+
+          <h2 class="font-display text-5xl md:text-7xl text-white tracking-tight uppercase leading-tight mb-6">
+            BU GÜCÜ BİRLİKTE <br>
+            <span class="text-transparent bg-clip-text bg-gradient-to-r from-hardline-red via-red-500 to-orange-500">SAHAYA İNDİRELİM.</span>
+          </h2>
+
+          <p class="text-base md:text-xl text-gray-300 max-w-2xl mx-auto mb-8 font-light leading-relaxed">
+            Sayın Buket Hanım; Hardline Nutrition'ın marka liderliğini sahada gençliğin enerjisiyle birleştirecek bu projeyi <strong>15 dakikalık bir görüşmede</strong> takvime bağlayabiliriz.
+          </p>
+
+          <div class="p-8 rounded-3xl bg-neutral-900/90 border border-hardline-red/40 max-w-2xl mx-auto mb-8 shadow-[0_0_50px_rgba(227,6,19,0.2)]">
+            <div class="flex flex-col sm:flex-row items-center justify-between gap-6">
+              <div class="text-left">
+                <div class="text-xs text-hardline-red font-mono uppercase tracking-widest font-bold">PROJE YÖNETİMİ</div>
+                <div class="text-2xl font-bold text-white mt-1">Berke Saygılı</div>
+                <div class="text-xs text-gray-400 mt-1">SET Topluluğu Yönetim Kurulu Adına</div>
+                <div class="text-xs text-gray-300 mt-1 font-mono flex items-center gap-1.5">
+                  <i data-lucide="phone" class="w-3.5 h-3.5 text-hardline-red"></i>
+                  <span>0534 666 13 17</span>
+                </div>
+                <div class="text-[11px] text-gray-500 mt-0.5">Tekirdağ Namık Kemal Üniversitesi</div>
+              </div>
+
+              <div class="flex flex-col gap-3 w-full sm:w-auto">
+                <a href="https://wa.me/905346661317?text=Buket%20Hanım%20merhabalar,%20SET%20x%20Hardline%20sunumunu%20inceledim,%20görüşme%20planlayabiliriz." target="_blank" class="btn-primary text-center justify-center">
+                  <i data-lucide="message-circle" class="w-4 h-4 mr-2"></i>
+                  <span>WhatsApp'tan Yazın</span>
+                </a>
+                <button onclick="window.print()" class="px-5 py-2.5 rounded-xl bg-white/10 hover:bg-white/15 border border-white/15 text-xs font-bold text-gray-300 transition-all flex items-center justify-center">
+                  <i data-lucide="printer" class="w-4 h-4 mr-2"></i>
+                  <span>Sunumu Yazdır / PDF</span>
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <div class="flex items-center justify-center space-x-4 mb-3 opacity-90">
+            <img src="assets/images/hardline_logo.svg" alt="Hardline Nutrition" class="h-6 md:h-7 w-auto object-contain">
+            <span class="text-xs text-gray-500">×</span>
+            <img src="assets/images/set_logo_white.png" alt="SET Topluluğu" class="h-5 md:h-6 w-auto object-contain">
+          </div>
+
+          <div class="text-xs font-mono text-gray-500 flex items-center justify-center gap-3">
+            <span>SET Topluluğu © 2026</span>
+            <span>•</span>
+            <span class="text-hardline-red">Hardline Nutrition Özel Proje Sunumu</span>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- Interactive Image Modal Preview -->
+  <div id="image-modal" class="fixed inset-0 z-50 bg-black/90 backdrop-blur-xl flex items-center justify-center p-6 opacity-0 pointer-events-none transition-opacity duration-300">
+    <div class="relative max-w-5xl w-full max-h-[90vh] flex flex-col items-center">
+      <button id="modal-close" class="absolute -top-12 right-0 text-white/70 hover:text-white p-2">
+        <i data-lucide="x" class="w-8 h-8"></i>
+      </button>
+      <img id="modal-img" src="" alt="Önizleme" class="max-h-[80vh] w-auto rounded-xl border border-white/20 shadow-2xl object-contain">
+      <div id="modal-caption" class="text-sm font-mono text-gray-300 mt-4 text-center"></div>
+    </div>
+  </div>
+
+  <!-- Audio Engine (Web Audio API Synthesizer) & App JS -->
+  <script src="presentation.js"></script>
+</body>
+</html>
